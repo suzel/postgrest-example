@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+
+  postgrest:
+    image: postgrest/postgrest:latest
+    hostname: postgrest
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:alpine
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - postgres-api:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+
+  pgweb:
+    image: sosedoff/pgweb:latest
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      - postgres
+
+volumes:
+  postgres-api: {}
