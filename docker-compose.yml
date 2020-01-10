@@ -1,7 +1,6 @@
-version: '3.1'
+version: "3.0"
 
 services:
-
   postgrest:
     image: postgrest/postgrest:latest
     hostname: postgrest

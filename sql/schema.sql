@@ -1,7 +1,6 @@
 create schema api;
 create role web_anon nologin;
 
-grant web_anon to postgres;
 grant usage on schema api to web_anon;
 
 create table api.todos (
